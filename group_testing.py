@@ -39,7 +39,6 @@ class Algorithm:
         '''Randomly generates a group to test'''
         group = generate_bin_array(self.n, 1/self.k)
         self.groups.append(group)
-        # What should this probability be? Random?
         print(group)
 
 
@@ -48,8 +47,16 @@ class COMP(Algorithm):
     def __init__(self, TestSet):
         super().__init__(TestSet)
         definitely_negative = []
+        T = 0
         for group in self.groups:
-            definitely_negative += self.test_group(group)
+            # Add all the DNDs from this test without duplicates
+            definitely_negative = list(
+                    set(definitely_negative + self.test_group(group)))
+            if len(definitely_negative) < self.k:
+                self.choose_group()
+            T += 1
+        print('The set of defective items is: {}'.format(definitely_negative))
+        print('The number of tests required was {}'.format(T))
 
     def test_group(self, group):
         definitely_negative = []
