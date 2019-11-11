@@ -30,13 +30,14 @@ class Algorithm:
     def __init__(self, TestSet):
         self.test_array = TestSet.test_array
         self.n = TestSet.n
+        self.k = TestSet.k
         self.groups = []
         # Generate initial group
         self.choose_group()
 
     def choose_group(self):
         '''Randomly generates a group to test'''
-        group = generate_bin_array(self.n, 0.5)
+        group = generate_bin_array(self.n, 1/self.k)
         self.groups.append(group)
         # What should this probability be? Random?
         print(group)
@@ -46,19 +47,25 @@ class COMP(Algorithm):
     '''Includes all items that do not appear in any negative test'''
     def __init__(self, TestSet):
         super().__init__(TestSet)
+        definitely_negative = []
+        for group in self.groups:
+            definitely_negative += self.test_group(group)
 
-    def test_group(self):
+    def test_group(self, group):
         definitely_negative = []
         product = False
-        for i in range(0, self.n + 1):
-            if self.group[i]:
-                product = product or self.test_array[i]
-                if product:
-                    break
-                else:
+        for i in range(0, self.n):
+            if group[i]:
+                product = (product or self.test_array[i])
+                if not product:
                     definitely_negative.append(i)
         if product:
             definitely_negative = []
+            print('Test was positive')
+        else:
+            print('Test was negative')
+            print('Definitely not defective: {}'.format(definitely_negative))
+        return definitely_negative
 
 
 test = TestSet(7, 3)
