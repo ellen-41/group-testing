@@ -30,13 +30,16 @@ class Algorithm:
     def __init__(self, TestSet):
         self.test_array = TestSet.test_array
         self.n = TestSet.n
+        self.groups = []
+        # Generate initial group
         self.choose_group()
 
     def choose_group(self):
         '''Randomly generates a group to test'''
-        self.group = generate_bin_array(self.n, 0.5)
+        group = generate_bin_array(self.n, 0.5)
+        self.groups.append(group)
         # What should this probability be? Random?
-        print(self.group)
+        print(group)
 
 
 class SSS(Algorithm):
