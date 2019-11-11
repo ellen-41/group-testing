@@ -42,18 +42,6 @@ class Algorithm:
         print(group)
 
 
-class SSS(Algorithm):
-    '''Smallest satisfying set'''
-    def __init__(self, TestSet):
-        super().__init__(TestSet)
-
-    def test_group(self):
-        self.members_tested = []
-        for i in range(0, self.n + 1):
-            if self.group[i]:
-                members_tested.append(i)
-
-
 class COMP(Algorithm):
     '''Includes all items that do not appear in any negative test'''
     def __init__(self, TestSet):
