@@ -2,7 +2,7 @@ import numpy as np
 import random
 
 
-def generate_bin_array(n, p):
+def generate_prob_array(n, p):
     '''Generate a random array of 1s and 0s, 1s appearing with probability p'''
     bin_array = []
     for i in range(1, n + 1):
@@ -11,18 +11,24 @@ def generate_bin_array(n, p):
     return bin_array
 
 
+def generate_combin_array(n, k):
+    '''Generate a random array of 1s and 0s, with k 1s (fixed)'''
+    bin_array = np.zeros(n)
+    bin_array[:k] = 1
+    np.random.shuffle(bin_array)
+    return bin_array
+
+
 class TestSet:
     '''Object representing a test set of size n with roughly k defectives'''
     def __init__(self, n, k):
         self.n = n
         self.k = k
-        self.defective_prob = k/n
         self.create_array()
 
     def create_array(self):
-        '''Generates the test set as an array of 1s and 0s based on the
-            probability of an item being defective being k/n'''
-        self.test_array = generate_bin_array(self.n, self.defective_prob)
+        '''Generates the test set as an array of 1s and 0s'''
+        self.test_array = generate_combin_array(self.n, self.k)
 
 
 class Algorithm:
@@ -37,7 +43,7 @@ class Algorithm:
 
     def choose_group(self):
         '''Randomly generates a group to test'''
-        group = generate_bin_array(self.n, 1/self.k)
+        group = generate_prob_array(self.n, 1/self.k)
         if group not in self.groups:
             self.groups.append(group)
         else:
@@ -61,6 +67,8 @@ class COMP(Algorithm):
             if T == 50:
                 break
         print('The set of DND items is: {}'.format(definitely_negative))
+        defective_items = self.return_defective_items(definitely_negative)
+        print('As such, the defective items are: {}'.format(defective_items))
         print('The number of tests required was {}'.format(T))
 
     def test_group(self, group):
@@ -73,11 +81,17 @@ class COMP(Algorithm):
                     definitely_negative.append(i)
         if product:
             definitely_negative = []
-            print('Test was positive')
+            print('Test was positive\n')
         else:
             print('Test was negative')
-            print('Definitely not defective: {}'.format(definitely_negative))
+            print('Definitely not defective: {}\n'.format(definitely_negative))
         return definitely_negative
+
+    def return_defective_items(self, dnd_list):
+        all_elements = list(range(0, self.n))
+        print(all_elements)
+        defective_items = np.setdiff1d(all_elements, dnd_list)
+        return defective_items
 
 
 test = TestSet(10, 3)
