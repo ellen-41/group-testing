@@ -45,10 +45,12 @@ class Algorithm:
         '''Randomly generates a group to test'''
         group = generate_prob_array(self.n, 1/self.k)
         if group not in self.groups:
+            # Ensures that the group has not been tested before
             self.groups.append(group)
+            print(group)
         else:
+            # If the group has been used before, we discard it
             self.choose_group()
-        print(group)
 
 
 class COMP(Algorithm):
@@ -97,5 +99,5 @@ class COMP(Algorithm):
 test = TestSet(10, 3)
 print('The test set is:')
 print(test.test_array)
-print('----------------------')
+print('... beginning testing ...\n')
 pool = COMP(test)
