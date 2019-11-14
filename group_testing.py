@@ -38,7 +38,10 @@ class Algorithm:
     def choose_group(self):
         '''Randomly generates a group to test'''
         group = generate_bin_array(self.n, 1/self.k)
-        self.groups.append(group)
+        if group not in self.groups:
+            self.groups.append(group)
+        else:
+            self.choose_group()
         print(group)
 
 
@@ -52,10 +55,12 @@ class COMP(Algorithm):
             # Add all the DNDs from this test without duplicates
             definitely_negative = list(
                     set(definitely_negative + self.test_group(group)))
-            if len(definitely_negative) < self.k:
+            if len(definitely_negative) < (self.n - self.k):
                 self.choose_group()
             T += 1
-        print('The set of defective items is: {}'.format(definitely_negative))
+            if T == 50:
+                break
+        print('The set of DND items is: {}'.format(definitely_negative))
         print('The number of tests required was {}'.format(T))
 
     def test_group(self, group):
@@ -75,6 +80,8 @@ class COMP(Algorithm):
         return definitely_negative
 
 
-test = TestSet(7, 3)
+test = TestSet(10, 3)
+print('The test set is:')
 print(test.test_array)
+print('----------------------')
 pool = COMP(test)
