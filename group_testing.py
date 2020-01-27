@@ -19,8 +19,16 @@ def generate_combin_array(n, k):
     return bin_array
 
 
+def defectives_to_array(n, defective_items):
+    '''Convert an array of defective indices into the original array'''
+    bin_array = np.zeros(n)
+    for defective in defective_items:
+        bin_array[defective] = 1
+    return bin_array
+
+
 class TestSet:
-    '''Object representing a test set of size n with roughly k defectives'''
+    '''Object representing a test set of size n with exactly k defectives'''
     def __init__(self, n, k):
         self.n = n
         self.k = k
@@ -70,8 +78,11 @@ class COMP(Algorithm):
                 break
         print('The set of DND items is: {}'.format(definitely_negative))
         defective_items = self.return_defective_items(definitely_negative)
+        output_array = defectives_to_array(self.n, defective_items)
+        print(output_array)
         print('As such, the defective items are: {}'.format(defective_items))
-        print('The number of tests required was {}'.format(T))
+        print('The number of tests required was {}\n'.format(T))
+        print('Our outputted test array is: \n{}'.format(output_array))
 
     def test_group(self, group):
         definitely_negative = []
@@ -91,7 +102,6 @@ class COMP(Algorithm):
 
     def return_defective_items(self, dnd_list):
         all_elements = list(range(0, self.n))
-        print(all_elements)
         defective_items = np.setdiff1d(all_elements, dnd_list)
         return defective_items
 
