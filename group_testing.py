@@ -79,7 +79,6 @@ class COMP(Algorithm):
         print('The set of DND items is: {}'.format(definitely_negative))
         defective_items = self.return_defective_items(definitely_negative)
         output_array = defectives_to_array(self.n, defective_items)
-        print(output_array)
         print('As such, the defective items are: {}'.format(defective_items))
         print('The number of tests required was {}\n'.format(T))
         print('Our outputted test array is: \n{}'.format(output_array))
