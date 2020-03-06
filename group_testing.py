@@ -75,6 +75,7 @@ class COMP(Algorithm):
                 self.choose_group()
             T += 1
             if T == 50:
+                print('More than 50 tests required')
                 break
         print('The set of DND items is: {}'.format(definitely_negative))
         defective_items = self.return_defective_items(definitely_negative)
