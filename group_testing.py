@@ -65,6 +65,7 @@ class COMP(Algorithm):
     '''Includes all items that do not appear in any negative test'''
     def __init__(self, TestSet):
         super().__init__(TestSet)
+        input_array = TestSet.test_array
         definitely_negative = []
         T = 0
         for group in self.groups:
@@ -83,6 +84,7 @@ class COMP(Algorithm):
         print('As such, the defective items are: {}'.format(defective_items))
         print('The number of tests required was {}\n'.format(T))
         print('Our outputted test array is: \n{}'.format(output_array))
+        self.compare_output(input_array, output_array)
 
     def test_group(self, group):
         definitely_negative = []
@@ -105,6 +107,10 @@ class COMP(Algorithm):
         # Remove the DND items from array of all items, leaving only defectives
         defective_items = np.setdiff1d(all_elements, dnd_list)
         return defective_items
+
+    def compare_output(self, input_array, output_array):
+        if (input_array == output_array).all:
+            print('Original array obtained')
 
 
 test = TestSet(10, 3)
