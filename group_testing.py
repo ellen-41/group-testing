@@ -102,6 +102,7 @@ class COMP(Algorithm):
 
     def return_defective_items(self, dnd_list):
         all_elements = list(range(0, self.n))
+        # Remove the DND items from array of all items, leaving only defectives
         defective_items = np.setdiff1d(all_elements, dnd_list)
         return defective_items
 
