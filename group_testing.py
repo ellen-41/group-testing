@@ -113,6 +113,13 @@ class COMP(Algorithm):
             print('Original array obtained')
 
 
+class DD(Algorithm):
+    '''Categorises items as PD and checks if they are in single item tests'''
+    def __init__(self, TestSet):
+        super().__init__(TestSet)
+        input_array = TestSet.test_array
+
+
 test = TestSet(10, 3)
 print('The test set is:')
 print(test.test_array)
