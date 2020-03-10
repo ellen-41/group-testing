@@ -87,6 +87,7 @@ class COMP(Algorithm):
         self.compare_output(input_array, output_array)
 
     def test_group(self, group):
+        '''Performs a single test and returns the indices of DND items'''
         definitely_negative = []
         product = False
         for i in range(0, self.n):
@@ -103,12 +104,13 @@ class COMP(Algorithm):
         return definitely_negative
 
     def return_defective_items(self, dnd_list):
+        '''Remove the DNDs from array of all items, leaving only defectives'''
         all_elements = list(range(0, self.n))
-        # Remove the DND items from array of all items, leaving only defectives
         defective_items = np.setdiff1d(all_elements, dnd_list)
         return defective_items
 
     def compare_output(self, input_array, output_array):
+        '''Check if our Khat is the same as the original set'''
         if (input_array == output_array).all:
             print('Original array obtained')
 
