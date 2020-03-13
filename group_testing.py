@@ -85,6 +85,7 @@ class COMP(Algorithm):
         print('The number of tests required was {}\n'.format(T))
         print('Our outputted test array is: \n{}'.format(output_array))
         self.compare_output(input_array, output_array)
+        self.T = T
 
     def test_group(self, group):
         '''Performs a single test and returns the indices of DND items'''
