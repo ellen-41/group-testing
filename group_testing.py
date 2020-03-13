@@ -52,13 +52,13 @@ class Algorithm:
     def choose_group(self):
         '''Randomly generates a group to test'''
         group = generate_prob_array(self.n, 1/self.k)
-        if group not in self.groups:
+        if group in self.groups:
             # Ensures that the group has not been tested before
-            self.groups.append(group)
-            print(group)
-        else:
             # If the group has been used before, we discard it
             self.choose_group()
+        else:
+            self.groups.append(group)
+            print(group)
 
 
 class COMP(Algorithm):
