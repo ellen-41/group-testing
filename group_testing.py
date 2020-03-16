@@ -51,7 +51,7 @@ class Algorithm:
 
     def choose_group(self):
         '''Randomly generates a group to test'''
-        group = generate_prob_array(self.n, 1/self.k)
+        group = generate_prob_array(self.n, 1/(self.k + 1))
         if group in self.groups:
             # Ensures that the group has not been tested before
             # If the group has been used before, we discard it
@@ -75,7 +75,7 @@ class COMP(Algorithm):
             if len(definitely_negative) < (self.n - self.k):
                 self.choose_group()
             T += 1
-            if T == 50:
+            if T == 100:
                 print('More than 50 tests required')
                 break
         print('The set of DND items is: {}'.format(definitely_negative))
@@ -121,10 +121,3 @@ class DD(Algorithm):
     def __init__(self, TestSet):
         super().__init__(TestSet)
         input_array = TestSet.test_array
-
-
-test = TestSet(10, 3)
-print('The test set is:')
-print(test.test_array)
-print('... beginning testing ...\n')
-pool = COMP(test)
