@@ -1,5 +1,5 @@
-import numpy as np
 import random
+import numpy as np
 
 
 def generate_prob_array(n, p):
@@ -58,12 +58,18 @@ class Algorithm:
             self.choose_group()
         else:
             self.groups.append(group)
-            print(group)
+
+    def compare_output(self, input_array, output_array):
+        '''Check if our Khat is the same as the original set'''
+        if np.array_equal(input_array, output_array):
+            return True
+        else:
+            return False
 
 
 class COMP(Algorithm):
     '''Includes all items that do not appear in any negative test'''
-    def __init__(self, TestSet):
+    def __init__(self, TestSet, num_tests):
         super().__init__(TestSet)
         input_array = TestSet.test_array
         definitely_negative = []
@@ -75,17 +81,12 @@ class COMP(Algorithm):
             if len(definitely_negative) < (self.n - self.k):
                 self.choose_group()
             T += 1
-            if T == 100:
-                print('More than 50 tests required')
+            if T == num_tests:
                 break
-        print('The set of DND items is: {}'.format(definitely_negative))
-        defective_items = self.return_defective_items(definitely_negative)
-        output_array = defectives_to_array(self.n, defective_items)
-        print('As such, the defective items are: {}'.format(defective_items))
-        print('The number of tests required was {}\n'.format(T))
-        print('Our outputted test array is: \n{}'.format(output_array))
-        self.compare_output(input_array, output_array)
-        self.T = T
+        possible_defectives = self.return_possible_defectives(
+            definitely_negative)
+        output_array = defectives_to_array(self.n, possible_defectives)
+        self.success = self.compare_output(input_array, output_array)
 
     def test_group(self, group):
         '''Performs a single test and returns the indices of DND items'''
@@ -98,26 +99,65 @@ class COMP(Algorithm):
                     definitely_negative.append(i)
         if product:
             definitely_negative = []
-            print('Test was positive\n')
-        else:
-            print('Test was negative')
-            print('Definitely not defective: {}\n'.format(definitely_negative))
         return definitely_negative
 
-    def return_defective_items(self, dnd_list):
-        '''Remove the DNDs from array of all items, leaving only defectives'''
+    def return_possible_defectives(self, dnd_list):
+        '''Remove DNDs from array of all items, leaving possible defectives'''
         all_elements = list(range(0, self.n))
-        defective_items = np.setdiff1d(all_elements, dnd_list)
-        return defective_items
-
-    def compare_output(self, input_array, output_array):
-        '''Check if our Khat is the same as the original set'''
-        if (input_array == output_array).all:
-            print('Original array obtained')
+        possible_defectives = np.setdiff1d(all_elements, dnd_list)
+        return possible_defectives
 
 
 class DD(Algorithm):
-    '''Categorises items as PD and checks if they are in single item tests'''
-    def __init__(self, TestSet):
+    '''Eliminates all DND items, leaving only possible defectives,
+        and outputs any of these that are the only item in a positive test'''
+    def __init__(self, TestSet, num_tests):
         super().__init__(TestSet)
         input_array = TestSet.test_array
+        definitely_negative = []
+        # Array to hold our estimate for the defective set
+        k_dd = []
+        T = 0
+        for group in self.groups:
+            # Add all the DNDs from this test without duplicates
+            definitely_negative = list(
+                    set(definitely_negative + self.test_group(group)))
+            if len(definitely_negative) < (self.n - self.k):
+                self.choose_group()
+            T += 1
+            if T == num_tests:
+                break
+        possible_defectives = self.return_possible_defectives(
+            definitely_negative)
+        for group in self.groups:
+            '''If an item is PD and only appears in a single test,
+                add it to our array of definite defectives'''
+            num_pd = 0
+            dd_item = 0
+            for i in possible_defectives:
+                if group[i] == 1:
+                    num_pd += 1
+                    dd_item = i
+            if num_pd == 1:
+                k_dd.append(dd_item)
+        output_array = defectives_to_array(self.n, k_dd)
+        self.success = self.compare_output(input_array, output_array)
+
+    def test_group(self, group):
+        '''Performs a single test and returns the indices of DND items'''
+        definitely_negative = []
+        product = False
+        for i in range(0, self.n):
+            if group[i]:
+                product = (product or self.test_array[i])
+                if not product:
+                    definitely_negative.append(i)
+        if product:
+            definitely_negative = []
+        return definitely_negative
+
+    def return_possible_defectives(self, dnd_list):
+        '''Remove DNDs from array of all items, leaving possible defectives'''
+        all_elements = list(range(0, self.n))
+        possible_defectives = np.setdiff1d(all_elements, dnd_list)
+        return possible_defectives
