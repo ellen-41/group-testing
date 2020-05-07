@@ -54,7 +54,6 @@ class Algorithm:
         group = generate_prob_array(self.n, 1/(self.k + 1))
         if group in self.groups:
             # Ensures that the group has not been tested before
-            # If the group has been used before, we discard it
             self.choose_group()
         else:
             self.groups.append(group)
