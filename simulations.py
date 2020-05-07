@@ -6,8 +6,8 @@ from algorithms import COMP, DD, TestSet
 
 # Set variables to produce graph
 n = 500
-k = 10
-test_increment = 20
+k = 5
+test_increment = 10
 num_iterations = 1000
 
 # Initialise test vector and data arrays
@@ -22,7 +22,7 @@ while i < n:
     i += test_increment
     tests.append(i)
 
-# Compute counting bound (and only plot the sensible values!)
+# Compute counting bound (loop used to cast to int for large values)
 x = np.arange(n)
 y = np.zeros(n)
 for i in range(0, n):
@@ -54,4 +54,5 @@ ax1.set_title(
 plt.plot(x, y, label="counting bound")
 ax1.set_ylim(0, 1)
 plt.legend(loc="lower right")
-plt.show()
+fig1.set_size_inches(10, 6)
+plt.savefig("n{}k{}".format(n, k), dpi=300)
